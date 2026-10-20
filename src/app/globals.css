@@ -1,26 +1,634 @@
 @import "tailwindcss";
 
+/* ─────────────────────────────────────────────
+   THE GO CHURCH — DESIGN TOKENS
+   Colors extracted from:
+     - The GO Church Emblem.png (logo pixel analysis)
+     - thegochurchchicago.com site CSS
+
+   Logo green (emblem body):  #002800 → #009600
+   Logo gold (emblem accent): #a5782d → #f0c33c
+   Site accent green:         #209a47
+   Site warm off-white:       #e0dcce
+   ───────────────────────────────────────────── */
+
+@theme {
+  /* ── Logo-extracted greens ── */
+  --color-go-green-950: #001400;
+  --color-go-green-900: #002800;
+  --color-go-green-800: #003c00;
+  --color-go-green-700: #005a00;
+  --color-go-green-600: #007800;
+  --color-go-green-500: #009600;
+
+  /* ── Logo-extracted golds ── */
+  --color-go-gold-900: #7a5010;
+  --color-go-gold-800: #a5782d;
+  --color-go-gold-700: #b4872d;
+  --color-go-gold-600: #c8962d;
+  --color-go-gold-500: #d2a832;
+  --color-go-gold-400: #e1b43c;
+  --color-go-gold-300: #f0c33c;
+  --color-go-gold-200: #fad264;
+  --color-go-gold-100: #fae696;
+
+  /* ── Site accent green ── */
+  --color-go-accent:       #209a47;
+  --color-go-accent-dark:  #176e32;
+  --color-go-accent-light: #2db85a;
+
+  /* ── Neutrals ── */
+  --color-go-black:    #0a0a0a;
+  --color-go-gray-950: #0e0e0e;
+  --color-go-gray-900: #1a1a1a;
+  --color-go-gray-800: #272727;
+  --color-go-gray-700: #3e3e3e;
+  --color-go-gray-600: #5a5a5a;
+  --color-go-gray-400: #9a9a9a;
+  --color-go-gray-200: #e7e7e7;
+  --color-go-gray-100: #f4f4f4;
+  --color-go-gray-50:  #fafafa;
+  --color-go-white:    #ffffff;
+
+  /* ── Warm tones ── */
+  --color-go-warm-50:  #f8f5ee;
+  --color-go-warm-100: #e0dcce;
+
+  /* ── Typography ── */
+  --font-display: var(--font-archivo-black), 'Archivo Black', sans-serif;
+  --font-heading:  var(--font-archivo), 'Archivo', sans-serif;
+  --font-body:     var(--font-montserrat), 'Montserrat', sans-serif;
+  --font-serif:    var(--font-dm-serif), 'DM Serif Display', Georgia, serif;
+}
+
+/* ─────────────────────────────────────────────
+   SEMANTIC VARIABLES
+   ───────────────────────────────────────────── */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --canvas:            #ffffff;
+  --surface:           #f4f4f4;
+  --surface-warm:      #f8f5ee;
+  --foreground:        #0e0e0e;
+  --foreground-muted:  #3e3e3e;
+  --primary:           #209a47;
+  --primary-dark:      #176e32;
+  --primary-fg:        #ffffff;
+  --gold:              #b4872d;
+  --border:            #e7e7e7;
+  --focus-ring:        #209a47;
+  --overlay:           rgba(0, 20, 0, 0.65);
+
+  /* Cinematic overlays */
+  --overlay-deep:      rgba(0, 10, 0, 0.82);
+  --overlay-mid:       rgba(0, 20, 0, 0.68);
+  --overlay-light:     rgba(0, 30, 0, 0.45);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+/* ─────────────────────────────────────────────
+   BASE
+   ───────────────────────────────────────────── */
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
-  background: var(--background);
+  background: var(--canvas);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.65;
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 3px;
+}
+
+/* ─────────────────────────────────────────────
+   SKIP LINK
+   ───────────────────────────────────────────── */
+
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: 1rem;
+  z-index: 9999;
+  padding: 0.5rem 1rem;
+  background: var(--primary);
+  color: white;
+  font-weight: 700;
+  text-decoration: none;
+}
+.skip-link:focus { top: 0; }
+
+/* ─────────────────────────────────────────────
+   TYPOGRAPHY UTILITIES
+   ───────────────────────────────────────────── */
+
+.text-display {
+  font-family: var(--font-display);
+  font-size: clamp(2.75rem, 7vw, 6rem);
+  line-height: 1.0;
+  letter-spacing: -0.02em;
+}
+/* Larger cinematic display for hero */
+.text-display-xl {
+  font-family: var(--font-display);
+  font-size: clamp(3.25rem, 9vw, 8rem);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+}
+.text-h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.25rem, 5vw, 4rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+.text-h2 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+.text-h3 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: clamp(1.25rem, 2.5vw, 1.875rem);
+  line-height: 1.2;
+}
+.text-label {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.text-body-lg {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 1.125rem;
+  line-height: 1.7;
+}
+/* Editorial pull-quote size */
+.text-pull {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
+/* ─────────────────────────────────────────────
+   SECTION TREATMENTS
+   ───────────────────────────────────────────── */
+
+.section-light   { background: var(--canvas);       color: var(--foreground); }
+.section-warm    { background: var(--surface-warm);  color: var(--foreground); }
+.section-surface { background: var(--surface);       color: var(--foreground); }
+
+.section-dark {
+  background: #002800;
+  color: #ffffff;
+}
+.section-darkest {
+  background: #001400;
+  color: #ffffff;
+}
+.section-accent {
+  background: #209a47;
+  color: #ffffff;
+}
+/* Near-black editorial section */
+.section-ink {
+  background: #080e08;
+  color: #ffffff;
+}
+/* Warm off-white editorial */
+.section-parchment {
+  background: #f0ece0;
+  color: #0e0e0e;
+}
+
+/* ─────────────────────────────────────────────
+   CONTAINERS
+   ───────────────────────────────────────────── */
+
+.container-site {
+  max-width: 1500px;
+  margin-inline: auto;
+  padding-inline: clamp(1.25rem, 5vw, 4rem);
+}
+.container-content {
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: clamp(1.25rem, 5vw, 4rem);
+}
+.container-narrow {
+  max-width: 800px;
+  margin-inline: auto;
+  padding-inline: clamp(1.25rem, 5vw, 4rem);
+}
+/* Full-bleed — no horizontal padding, used for edge-to-edge image sections */
+.container-bleed {
+  width: 100%;
+}
+
+/* ─────────────────────────────────────────────
+   SECTION SPACING
+   ───────────────────────────────────────────── */
+
+.section-py    { padding-block: clamp(3.5rem, 8vw, 6rem); }
+.section-py-sm { padding-block: clamp(2.5rem, 5vw, 4rem); }
+.section-py-lg { padding-block: clamp(5rem, 12vw, 9rem); }
+
+/* ─────────────────────────────────────────────
+   BUTTONS
+   ───────────────────────────────────────────── */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 0.9375rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 0.875rem 2rem;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.15s;
+  white-space: nowrap;
+  line-height: 1;
+}
+.btn:active { transform: scale(0.98); }
+
+.btn-primary {
+  background: #209a47;
+  color: #ffffff;
+  border-color: #209a47;
+}
+.btn-primary:hover {
+  background: #176e32;
+  border-color: #176e32;
+}
+
+.btn-primary-dark {
+  background: #ffffff;
+  color: #002800;
+  border-color: #ffffff;
+}
+.btn-primary-dark:hover {
+  background: #e0dcce;
+  border-color: #e0dcce;
+}
+
+.btn-outline {
+  background: transparent;
+  color: #209a47;
+  border-color: #209a47;
+}
+.btn-outline:hover {
+  background: #209a47;
+  color: #ffffff;
+}
+
+.btn-outline-white {
+  background: transparent;
+  color: #ffffff;
+  border-color: #ffffff;
+}
+.btn-outline-white:hover {
+  background: #ffffff;
+  color: #002800;
+}
+
+.btn-gold {
+  background: #b4872d;
+  color: #ffffff;
+  border-color: #b4872d;
+}
+.btn-gold:hover {
+  background: #a5782d;
+  border-color: #a5782d;
+}
+
+.btn-ghost-dark {
+  background: transparent;
+  color: #ffffff;
+  border-color: rgba(255,255,255,0.35);
+}
+.btn-ghost-dark:hover {
+  background: rgba(255,255,255,0.1);
+  border-color: rgba(255,255,255,0.7);
+}
+
+.btn-sm  { padding: 0.625rem 1.25rem;  font-size: 0.8125rem; }
+.btn-lg  { padding: 1.125rem 2.5rem;   font-size: 1rem; }
+.btn-xl  { padding: 1.375rem 3rem;     font-size: 1.0625rem; }
+
+/* ─────────────────────────────────────────────
+   CARD
+   ───────────────────────────────────────────── */
+
+.card {
+  background: var(--canvas);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  transition: box-shadow 0.25s, transform 0.25s;
+}
+.card:hover {
+  box-shadow: 0 8px 32px rgba(0,0,0,0.10);
+  transform: translateY(-2px);
+}
+
+/* Cinematic card — dark, no border */
+.card-cinema {
+  background: #001a00;
+  overflow: hidden;
+  transition: transform 0.4s cubic-bezier(0.25,0.46,0.45,0.94);
+}
+.card-cinema:hover { transform: translateY(-4px); }
+
+/* ─────────────────────────────────────────────
+   DIVIDERS
+   ───────────────────────────────────────────── */
+
+.gold-divider        { width: 3rem; height: 3px; background: #b4872d; }
+.gold-divider-center { width: 3rem; height: 3px; background: #b4872d; margin-inline: auto; }
+.gold-divider-lg     { width: 5rem; height: 4px; background: #b4872d; }
+
+/* ─────────────────────────────────────────────
+   CINEMATIC IMAGE OVERLAYS
+   ───────────────────────────────────────────── */
+
+/* Standard cinematic overlay — used on hero and full-bleed sections */
+.overlay-cinema {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    160deg,
+    rgba(0, 10, 0, 0.82) 0%,
+    rgba(0, 28, 0, 0.62) 50%,
+    rgba(0, 10, 0, 0.78) 100%
+  );
+}
+
+/* Bottom-up overlay — used on image cards with text at bottom */
+.overlay-bottom {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 10, 0, 0.92) 0%,
+    rgba(0, 10, 0, 0.55) 45%,
+    transparent 100%
+  );
+}
+
+/* Side overlay — editorial split sections */
+.overlay-side-left {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to right,
+    rgba(0, 20, 0, 0.88) 0%,
+    rgba(0, 20, 0, 0.55) 55%,
+    transparent 100%
+  );
+}
+
+/* ─────────────────────────────────────────────
+   EDITORIAL LAYOUT HELPERS
+   ───────────────────────────────────────────── */
+
+/* Asymmetric editorial grid — image bleeds, text inset */
+.editorial-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+}
+@media (min-width: 1024px) {
+  .editorial-grid { grid-template-columns: 55% 45%; }
+  .editorial-grid-reverse { grid-template-columns: 45% 55%; }
+}
+
+/* Cinematic full-height section */
+.section-cinematic {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* Tall feature section — not full-height but substantial */
+.section-feature {
+  position: relative;
+  min-height: 70vh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* ─────────────────────────────────────────────
+   ACCENT LINES & DECORATIVE ELEMENTS
+   ───────────────────────────────────────────── */
+
+/* Vertical gold rule — used in editorial layouts */
+.rule-gold-v {
+  width: 2px;
+  background: linear-gradient(to bottom, transparent, #b4872d 20%, #b4872d 80%, transparent);
+  align-self: stretch;
+  min-height: 4rem;
+}
+
+/* Horizontal rule with fade */
+.rule-fade {
+  height: 1px;
+  background: linear-gradient(to right, transparent, #e7e7e7 20%, #e7e7e7 80%, transparent);
+}
+.rule-fade-gold {
+  height: 1px;
+  background: linear-gradient(to right, transparent, #b4872d 20%, #b4872d 80%, transparent);
+}
+
+/* Large background letter — decorative, aria-hidden */
+.bg-letter {
+  font-family: var(--font-display);
+  font-size: clamp(8rem, 20vw, 18rem);
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: rgba(0, 40, 0, 0.06);
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ─────────────────────────────────────────────
+   HEADER
+   ───────────────────────────────────────────── */
+
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  transition: background 0.3s, box-shadow 0.3s, transform 0.3s;
+}
+.site-header.scrolled {
+  background: rgba(0, 18, 0, 0.94);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 1px 0 rgba(240, 195, 60, 0.18);
+}
+.site-header.hidden {
+  transform: translateY(-100%);
+}
+
+/* ─────────────────────────────────────────────
+   IMAGE HOVER EFFECTS
+   ───────────────────────────────────────────── */
+
+.img-zoom {
+  transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.img-zoom:hover { transform: scale(1.04); }
+
+/* ─────────────────────────────────────────────
+   SCROLL REVEAL UTILITY
+   (JS-driven — adds .revealed class)
+   ───────────────────────────────────────────── */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.65s ease, transform 0.65s ease;
+}
+.reveal.revealed {
+  opacity: 1;
+  transform: none;
+}
+
+/* ─────────────────────────────────────────────
+   HOME — "FAITH IN MOTION" TREATMENTS
+   ───────────────────────────────────────────── */
+
+.text-serif-display {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: clamp(2.75rem, 6.2vw, 5.75rem);
+  line-height: 0.98;
+  letter-spacing: -0.01em;
+}
+.text-serif-h2 {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: clamp(2rem, 3.4vw, 2.75rem);
+  line-height: 1.05;
+}
+.text-serif-h3 {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: clamp(1.375rem, 1.8vw, 1.625rem);
+  line-height: 1.1;
+}
+.text-tracked {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 0.6875rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+}
+
+.text-gold-gradient {
+  background: linear-gradient(180deg, #fae696 0%, #f0c33c 38%, #c8962d 72%, #a5782d 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Rounded pill buttons */
+.btn-pill { border-radius: 999px; text-transform: none; letter-spacing: 0.01em; }
+
+.btn-green-glow {
+  background: linear-gradient(180deg, #2db85a 0%, #209a47 55%, #176e32 100%);
+  color: #ffffff;
+  border-color: rgba(250, 230, 150, 0.35);
+  box-shadow: 0 6px 24px rgba(32, 154, 71, 0.35);
+}
+.btn-green-glow:hover { filter: brightness(1.08); }
+
+.btn-gold-outline {
+  background: rgba(0, 10, 0, 0.35);
+  color: #ffffff;
+  border-color: #d2a832;
+}
+.btn-gold-outline:hover { background: rgba(210, 168, 50, 0.16); }
+
+.btn-gold-fill {
+  background: linear-gradient(180deg, #fad264 0%, #e1b43c 50%, #c8962d 100%);
+  color: #001400;
+  border-color: #e1b43c;
+  box-shadow: 0 6px 24px rgba(225, 180, 60, 0.3);
+}
+.btn-gold-fill:hover { filter: brightness(1.06); }
+
+/* Circular arrow badge used on cards and event rows */
+.arrow-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 999px;
+  border: 1.5px solid currentColor;
+  flex-shrink: 0;
+  transition: background 0.2s, color 0.2s, transform 0.2s;
+}
+
+/* Dark glass card with gold hairline */
+.card-gold-frame {
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.875rem;
+  border: 1px solid rgba(210, 168, 50, 0.55);
+  background: #041004;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+/* Slow ambient zoom on the hero background */
+@keyframes hero-drift {
+  from { transform: scale(1.04); }
+  to   { transform: scale(1.12); }
+}
+.hero-drift { animation: hero-drift 24s ease-in-out infinite alternate; }
+
+@keyframes rise-in {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: none; }
+}
+.rise-in { animation: rise-in 0.8s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+/* ─────────────────────────────────────────────
+   REDUCED MOTION
+   ───────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .img-zoom:hover { transform: none; }
+  .hero-drift, .rise-in { animation: none; }
 }
